@@ -1,36 +1,49 @@
 #HANGMAN Project
 
+# import os
 import random
-import menu
+import config
+from ascii import logo, stages
 
-words = ["Hello", "World", "lorem", "Minecraft"]
-word = []
-
-def gererate_wrodline(word_list):
-    word = random.choice(word_list).lower()
-    word_line = []
-    for letter in word:
-        word_line += [letter]
-    return word_line
-
-
-menu.game_menu(0)
+# def game_menu(state):
+#     clear()
+#     if state == 0:
+#         print(logo)
+#         print("Welcome to CUM ZONE")
+#     elif state == 1:
+#         print("Win!")
+#     elif state == 2:
+#         print("Game over..")
+#     if input("Press Enter to start new game ") == "" :
+#         gameplay()
+#     else:
+#         print("Game closed")
+#         exit(0)
 
 def gameplay():
-    health = 6
-    wordline = gererate_wrodline(words)
-    while(life != 0):
+    print(logo)
+    print("Welcome to CUM ZONE")
+
+    stats = config.stats()
+    while(stats.health != 0):
+        correct = False
         key = input("Enter word: ")
-        correct = false
-        for letter in wordline:
+        for index, letter in enumerate(stats.wordline):
             if key == letter:
-                print("correct")
-                correct = true
-            else:
-                print("uncorrect")
+                correct = True
+                stats.wordboard[index] = stats.wordline[index]
+        if correct == False : stats.health -= 1
+        word_display(stats)
+        if stats.health == 0:
+            print("You lose. The ungessed word was", "".join(stats.wordline).upper())
+            exit(0)
+        if "_" not in stats.wordboard:
+            print("You win")
+            exit(0)
 
+def word_display(stats):
+    print(stages[stats.health])
+    print("You have ", stats.health, " tries" if stats.health != 1 else " try")
+    print(''.join(stats.wordboard).upper())
 
-
-
-
-
+gameplay()
